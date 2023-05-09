@@ -1,17 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { Hero } from '../hero';
 import { HeroService } from '../hero.service';
+import { Observable, of, tap } from 'rxjs';
 
 @Component({
   selector: 'app-hero-detail',
   templateUrl: './hero-detail.component.html',
-  styleUrls: [ './hero-detail.component.css' ]
+  styleUrls: ['./hero-detail.component.css'],
 })
-export class HeroDetailComponent implements OnInit {
+export class HeroDetailComponent implements OnInit, DoCheck {
   hero: Hero | undefined;
+  testOne: Observable<boolean> = of(true).pipe(tap(() => console.log('testOne')));
 
   constructor(
     private route: ActivatedRoute,
@@ -23,10 +25,17 @@ export class HeroDetailComponent implements OnInit {
     this.getHero();
   }
 
+  ngDoCheck(): void {
+    console.log('doCheck');
+  }
+
+  testTwo(): Observable<boolean> {
+    return of(true).pipe(tap(() => console.log('testTwo')));
+  }
+
   getHero(): void {
     const id = parseInt(this.route.snapshot.paramMap.get('id')!, 10);
-    this.heroService.getHero(id)
-      .subscribe(hero => this.hero = hero);
+    this.heroService.getHero(id).subscribe((hero) => (this.hero = hero));
   }
 
   goBack(): void {
@@ -35,8 +44,7 @@ export class HeroDetailComponent implements OnInit {
 
   save(): void {
     if (this.hero) {
-      this.heroService.updateHero(this.hero)
-        .subscribe(() => this.goBack());
+      this.heroService.updateHero(this.hero).subscribe(() => this.goBack());
     }
   }
 }
