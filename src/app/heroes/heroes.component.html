@@ -8,6 +8,9 @@
   <button type="button" class="add-button" (click)="add(heroName.value); heroName.value=''">
     Add hero
   </button>
+  <button class="start-timer-button" (click)="startTimer()">Start timer</button>
+  <button class="stop-timer-button" (click)="stopTimer()">Stop timer</button>
+  {{formattedTime}}
 </div>
 
 <ul class="heroes">
